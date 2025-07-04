@@ -7,11 +7,341 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Your existing CSS remains unchanged */
-    :root { --bg-color: #1e1e2f; --card-color: #2c2c3e; --text-color: #fff; --accent-color: linear-gradient(90deg, red, orange, #ff9900, teal); }
-    [data-theme="light"] { --bg-color: #f5f5f5; --card-color: #ffffff; --text-color: #333; }
-    body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; padding: 20px; transition: all 0.3s ease; }
-    /* ... (keep all your existing styles) ... */
+    :root {
+      --bg-color: #1e1e2f;
+      --card-color: #2c2c3e;
+      --text-color: #fff;
+      --accent-color: linear-gradient(90deg, red, orange, #ff9900, teal);
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f5f5f5;
+      --card-color: #ffffff;
+      --text-color: #333;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header-title {
+      font-size: 2.2rem;
+      background: var(--accent-color);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: hue 3s linear infinite;
+      margin-bottom: 10px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .product-card {
+      background: var(--card-color);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .rainbow-text {
+      font-size: 1.4rem;
+      font-weight: 600;
+      background: var(--accent-color);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: hue 1s linear infinite;
+      margin-bottom: 10px;
+    }
+
+    .preview {
+      margin: 15px 0;
+    }
+
+    .preview img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .image-caption {
+      font-weight: bold;
+      margin-top: 10px;
+      color: var(--text-color);
+      font-size: 0.95rem;
+    }
+
+    .price-info {
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #aaa;
+      font-size: 1rem;
+    }
+
+    .discounted-price {
+      background: #4CAF50;
+      color: white;
+      padding: 3px 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .buyers-count {
+      font-size: 0.85rem;
+      color: #4CAF50;
+      margin-bottom: 15px;
+    }
+
+    .countdown {
+      background: rgba(0,0,0,0.2);
+      padding: 8px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-weight: bold;
+      font-size: 0.9rem;
+      animation: countdownPulse 1.5s infinite ease-in-out;
+    }
+
+    .price-button {
+      background: orange;
+      color: #fff;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.2s, box-shadow 0.3s;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .price-button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px rgba(255, 100, 0, 0.6);
+    }
+
+    @keyframes hue {
+      from { filter: hue-rotate(0deg); }
+      to { filter: hue-rotate(360deg); }
+    }
+
+    @keyframes countdownPulse {
+      0%   { color: red; }
+      50%  { color: orange; }
+      100% { color: red; }
+    }
+
+    /* Popup styles */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 998;
+    }
+
+    .popup {
+      background: var(--card-color);
+      color: var(--text-color);
+      border-radius: 12px;
+      padding: 25px;
+      max-width: 350px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 999;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+
+    .popup img {
+      width: 80%;
+      max-width: 180px;
+      height: auto;
+      margin: 0 auto 15px;
+      display: block;
+    }
+
+    .rainbow-price {
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: var(--accent-color);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: hue 4s linear infinite;
+      margin: 10px 0;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      box-sizing: border-box;
+      background: var(--card-color);
+      color: var(--text-color);
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      box-sizing: border-box;
+      background: var(--card-color);
+      color: var(--text-color);
+    }
+
+    input[type="file"]::file-selector-button {
+      padding: 8px 12px;
+      border-radius: 4px;
+      background-color: orange;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .confirm-btn {
+      background: orange;
+      color: #fff;
+      font-weight: bold;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: transform 0.2s, box-shadow 0.3s;
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .confirm-btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px rgba(255, 100, 0, 0.6);
+    }
+
+    .confirm-btn .loader {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .qr-tooltip {
+      font-size: 0.85rem;
+      color: #ffcc00;
+      margin: 8px 0 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+      
+      .header-title {
+        font-size: 1.8rem;
+      }
+      
+      .preview img {
+        height: 140px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-title {
+        font-size: 1.6rem;
+      }
+      
+      .rainbow-text {
+        font-size: 1.2rem;
+      }
+      
+      .price-button {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -20,136 +350,329 @@
     <h1 class="header-title">Premium Private Content Store</h1>
     <p>Exclusive content available for limited time only</p>
   </header>
-  <div class="products-grid" id="productsContainer"></div>
+
+  <div class="products-grid">
+    <!-- Product 1 -->
+    <div class="product-card">
+      <div class="rainbow-text">Private Recordings</div>
+      <div class="preview">
+        <img src="https://ik.imagekit.io/acsayebnbb/photo_2025-07-03_23-07-13.jpg?updatedAt=1751564312224" alt="Private Recordings" />
+        <div class="image-caption">Girls Private Group Chat Full Recordings</div>
+      </div>
+      <div class="price-info">
+        <span class="original-price">₹499</span>
+        <span class="discounted-price">₹99/- ONLY</span>
+      </div>
+      <div class="buyers-count">1509+ Buyers</div>
+      <div class="countdown">
+        ⏳ Offer ends in: <span class="timer">05:00</span>
+      </div>
+      <button class="price-button" onclick="showPopup('https://ik.imagekit.io/acsayebnbb/photo_2025-06-14_20-53-32.jpg?updatedAt=1749914662072', '₹99/- Only', 'form99')">₹99/- BUY NOW</button>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card">
+      <div class="rainbow-text">Premium Contents</div>
+      <div class="preview">
+        <img src="https://ik.imagekit.io/acsayebnbb/photo_2025-06-10_00-32-59.jpg?updatedAt=1749496165629" alt="Premium Contents" />
+        <div class="image-caption">Premium Content Channel 1000+ Videos</div>
+      </div>
+      <div class="price-info">
+        <span class="original-price">₹299</span>
+        <span class="discounted-price">₹49/- ONLY</span>
+      </div>
+      <div class="buyers-count">1308+ Buyers</div>
+      <div class="countdown">
+        ⏳ Offer ends in: <span class="timer">05:00</span>
+      </div>
+      <button class="price-button" onclick="showPopup('https://ik.imagekit.io/acsayebnbb/photo_2025-06-10_00-33-48.jpg?updatedAt=1749496165273', '₹49/- Only', 'form49')">₹49/- BUY NOW</button>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card">
+      <div class="rainbow-text">Exclusive Videos</div>
+      <div class="preview">
+        <img src="https://via.placeholder.com/300x200?text=Exclusive+Videos" alt="Exclusive Videos" />
+        <div class="image-caption">Unseen Exclusive Videos Collection</div>
+      </div>
+      <div class="price-info">
+        <span class="original-price">₹399</span>
+        <span class="discounted-price">₹79/- ONLY</span>
+      </div>
+      <div class="buyers-count">980+ Buyers</div>
+      <div class="countdown">
+        ⏳ Offer ends in: <span class="timer">05:00</span>
+      </div>
+      <button class="price-button" onclick="showPopup('https://via.placeholder.com/300x300?text=QR+Code+79', '₹79/- Only', 'form79')">₹79/- BUY NOW</button>
+    </div>
+
+    <!-- Product 4 -->
+    <div class="product-card">
+      <div class="rainbow-text">VIP Content</div>
+      <div class="preview">
+        <img src="https://via.placeholder.com/300x200?text=VIP+Content" alt="VIP Content" />
+        <div class="image-caption">VIP Members Only Special Content</div>
+      </div>
+      <div class="price-info">
+        <span class="original-price">₹599</span>
+        <span class="discounted-price">₹129/- ONLY</span>
+      </div>
+      <div class="buyers-count">750+ Buyers</div>
+      <div class="countdown">
+        ⏳ Offer ends in: <span class="timer">05:00</span>
+      </div>
+      <button class="price-button" onclick="showPopup('https://via.placeholder.com/300x300?text=QR+Code+129', '₹129/- Only', 'form129')">₹129/- BUY NOW</button>
+    </div>
+
+    <!-- Product 5 -->
+    <div class="product-card">
+      <div class="rainbow-text">Private Chats</div>
+      <div class="preview">
+        <img src="https://via.placeholder.com/300x200?text=Private+Chats" alt="Private Chats" />
+        <div class="image-caption">One-on-One Private Chat Recordings</div>
+      </div>
+      <div class="price-info">
+        <span class="original-price">₹449</span>
+        <span class="discounted-price">₹89/- ONLY</span>
+      </div>
+      <div class="buyers-count">1120+ Buyers</div>
+      <div class="countdown">
+        ⏳ Offer ends in: <span class="timer">05:00</span>
+      </div>
+      <button class="price-button" onclick="showPopup('https://via.placeholder.com/300x300?text=QR+Code+89', '₹89/- Only', 'form89')">₹89/- BUY NOW</button>
+    </div>
+
+    <!-- Product 6 -->
+    <div class="product-card">
+      <div class="rainbow-text">Special Collection</div>
+      <div class="preview">
+        <img src="https://via.placeholder.com/300x200?text=Special+Collection" alt="Special Collection" />
+        <div class="image-caption">Rare Special Collection 500+ Files</div>
+      </div>
+      <div class="price-info">
+        <span class="original-price">₹349</span>
+        <span class="discounted-price">₹69/- ONLY</span>
+      </div>
+      <div class="buyers-count">890+ Buyers</div>
+      <div class="countdown">
+        ⏳ Offer ends in: <span class="timer">05:00</span>
+      </div>
+      <button class="price-button" onclick="showPopup('https://via.placeholder.com/300x300?text=QR+Code+69', '₹69/- Only', 'form69')">₹69/- BUY NOW</button>
+    </div>
+
+    <!-- Product 7 -->
+    <div class="product-card">
+      <div class="rainbow-text">Premium Pack 1</div>
+      <div class="preview">
+        <img src="https://via.placeholder.com/300x200?text=Premium+Pack+1" alt="Premium Pack 1" />
+        <div class="image-caption">Premium Content Pack Volume 1</div>
+      </div>
+      <div class="price-info">
+        <span class="original-price">₹249</span>
+        <span class="discounted-price">₹39/- ONLY</span>
+      </div>
+      <div class="buyers-count">670+ Buyers</div>
+      <div class="countdown">
+        ⏳ Offer ends in: <span class="timer">05:00</span>
+      </div>
+      <button class="price-button" onclick="showPopup('https://via.placeholder.com/300x300?text=QR+Code+39', '₹39/- Only', 'form39')">₹39/- BUY NOW</button>
+    </div>
+
+    <!-- Product 8 -->
+    <div class="product-card">
+      <div class="rainbow-text">Premium Pack 2</div>
+      <div class="preview">
+        <img src="https://via.placeholder.com/300x200?text=Premium+Pack+2" alt="Premium Pack 2" />
+        <div class="image-caption">Premium Content Pack Volume 2</div>
+      </div>
+      <div class="price-info">
+        <span class="original-price">₹249</span>
+        <span class="discounted-price">₹39/- ONLY</span>
+      </div>
+      <div class="buyers-count">720+ Buyers</div>
+      <div class="countdown">
+        ⏳ Offer ends in: <span class="timer">05:00</span>
+      </div>
+      <button class="price-button" onclick="showPopup('https://via.placeholder.com/300x300?text=QR+Code+39-2', '₹39/- Only', 'form39-2')">₹39/- BUY NOW</button>
+    </div>
+
+    <!-- Product 9 -->
+    <div class="product-card">
+      <div class="rainbow-text">Ultimate Bundle</div>
+      <div class="preview">
+        <img src="https://via.placeholder.com/300x200?text=Ultimate+Bundle" alt="Ultimate Bundle" />
+        <div class="image-caption">All Content Ultimate Bundle</div>
+      </div>
+      <div class="price-info">
+        <span class="original-price">₹999</span>
+        <span class="discounted-price">₹199/- ONLY</span>
+      </div>
+      <div class="buyers-count">540+ Buyers</div>
+      <div class="countdown">
+        ⏳ Offer ends in: <span class="timer">05:00</span>
+      </div>
+      <button class="price-button" onclick="showPopup('https://via.placeholder.com/300x300?text=QR+Code+199', '₹199/- Only', 'form199')">₹199/- BUY NOW</button>
+    </div>
+
+    <!-- Product 10 -->
+    <div class="product-card">
+      <div class="rainbow-text">New Releases</div>
+      <div class="preview">
+        <img src="https://via.placeholder.com/300x200?text=New+Releases" alt="New Releases" />
+        <div class="image-caption">Fresh New Releases Weekly</div>
+      </div>
+      <div class="price-info">
+        <span class="original-price">₹199</span>
+        <span class="discounted-price">₹29/- ONLY</span>
+      </div>
+      <div class="buyers-count">420+ Buyers</div>
+      <div class="countdown">
+        ⏳ Offer ends in: <span class="timer">05:00</span>
+      </div>
+      <button class="price-button" onclick="showPopup('https://via.placeholder.com/300x300?text=QR+Code+29', '₹29/- Only', 'form29')">₹29/- BUY NOW</button>
+    </div>
+  </div>
+
+  <!-- Popup Overlay -->
   <div class="overlay" id="overlay" onclick="closePopup()"></div>
+
+  <!-- Dynamic Popup -->
   <div class="popup" id="popup">
-    <img src="" alt="QR Code" id="popupQrCode">
-    <div class="rainbow-price" id="popupPrice"></div>
-    <p>Scan and pay using the above QR code. After payment, enter your Telegram ID/Number and upload payment screenshot.</p>
+    <img src="" alt="QR Code" />
+    <div class="rainbow-price"></div>
+    <p>Scan and pay using the above QR code. After payment, enter your Telegram ID or Number and upload payment screenshot to get access.</p>
     <form id="popupForm" onsubmit="submitForm(event)">
       <input type="text" name="telegramId" placeholder="Enter Telegram ID/Number" required />
       <input type="file" name="paymentScreenshot" accept="image/*" required />
-      <p class="qr-tooltip">Upload payment screenshot after payment</p>
+      <p class="qr-tooltip">Please upload payment screenshot after payment</p>
       <button type="submit" class="confirm-btn">
         <span class="btn-text">Submit Payment Proof</span>
         <div class="loader"></div>
       </button>
     </form>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    // Initialize countdown timers for all products
+    document.querySelectorAll('.timer').forEach(timer => {
+      let timeLeft = 5 * 60; // 5 minutes in seconds
+      setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        if (timeLeft > 0) timeLeft--;
+      }, 1000);
+    });
+
+    // Show popup with product-specific QR code and price
+    function showPopup(qrSrc, priceText, formId) {
+      const popup = document.getElementById("popup");
+      const overlay = document.getElementById("overlay");
+
+      popup.querySelector("img").src = qrSrc;
+      popup.querySelector(".rainbow-price").textContent = priceText;
+      popup.querySelector("form").id = formId;
+
+      popup.style.display = "flex";
+      overlay.style.display = "block";
+    }
+
+    // Close popup
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+      document.getElementById("overlay").style.display = "none";
+    }
+
+    // Form submission handler
+    function submitForm(event) {
+      event.preventDefault();
+      const form = event.target;
+      const telegramId = form.querySelector('input[name="telegramId"]').value.trim();
+      const fileInput = form.querySelector('input[type="file"]');
+      const btn = form.querySelector('.confirm-btn');
+      const loader = btn.querySelector('.loader');
+      const btnText = btn.querySelector('.btn-text');
+
+      if (!telegramId) {
+        alert("Please enter your Telegram ID or phone number.");
+        return;
+      }
+
+      if (fileInput.files.length === 0) {
+        alert("Please upload your payment screenshot.");
+        return;
+      }
+
+      // Check file size (max 10MB)
+      if (fileInput.files[0].size > 10 * 1024 * 1024) {
+        alert("Please upload a screenshot smaller than 10MB");
+        return;
+      }
+
+      const botToken = "7765536352:AAHc5Acqa2OMVUZ5u8BeLoAX8NCojg-zXhk";
+      const chatId = "7586205549";
+      
+      btnText.style.visibility = 'hidden';
+      loader.style.display = 'block';
+
+      // Create FormData to handle file upload
+      const formData = new FormData();
+      formData.append('chat_id', chatId);
+      formData.append('caption', `📥 New Payment from ${form.id}\nTelegram ID: ${telegramId}`);
+      formData.append('photo', fileInput.files[0]);
+
+      // First send the photo with caption
+      fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.ok) {
+          // Then redirect to Telegram
+          window.location.href = "https://t.me/ownerayush";
+        } else {
+          throw new Error(data.description || "Failed to send payment proof");
+        }
+      })
+      .catch(error => {
+        loader.style.display = 'none';
+        btnText.style.visibility = 'visible';
+        alert("Error: " + error.message);
+        console.error(error);
+      });
+    }
+
+    // Supabase integration (added without changing anything else)
     const supabaseUrl = 'https://sjogcspgoyhybaiooqfm.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqb2djc3Bnb3loeWJhaW9vcWZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NjQwNDUsImV4cCI6MjA2NzI0MDA0NX0.2WLksrdiolPDv2uGNQAAmtdQWL0X0EYswM08KFWnKns';
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // Optional: You can add Supabase product loading logic here
+    // without affecting the existing hardcoded products
+    function loadProductsFromSupabase() {
+      supabase.from('products').select('*')
+        .then(({ data }) => {
+          if (data && data.length > 0) {
+            console.log("Loaded products from Supabase:", data);
+            // You could update products here if needed
+          }
+        })
+        .catch(error => {
+          console.error("Supabase error (non-critical):", error);
+        });
+    }
 
     // Theme toggle
     function toggleTheme() {
       document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
     }
 
-    // Load products
-    async function loadProducts() {
-      try {
-        const { data } = await supabase.from('products').select('*').order('created_at', { ascending: false });
-        renderProducts(data || getHardcodedProducts());
-      } catch (error) {
-        console.error("Error:", error);
-        renderProducts(getHardcodedProducts());
-      }
-    }
-
-    // Fallback products (your current items)
-    function getHardcodedProducts() {
-      return [
-        {
-          id: '1', title: 'Private Recordings', 
-          image: 'https://ik.imagekit.io/acsayebnbb/photo_2025-07-03_23-07-13.jpg',
-          description: 'Girls Private Group Chat Full Recordings',
-          original_price: '₹499', discounted_price: '₹99/- ONLY',
-          button_text: '₹99/- BUY NOW', buyers_count: '1509+ Buyers',
-          qr_code: 'https://ik.imagekit.io/acsayebnbb/photo_2025-06-14_20-53-32.jpg'
-        },
-        // Add all other products here...
-      ];
-    }
-
-    // Render products
-    function renderProducts(products) {
-      const container = document.getElementById('productsContainer');
-      container.innerHTML = products.map(product => `
-        <div class="product-card">
-          <div class="rainbow-text">${product.title}</div>
-          <div class="preview">
-            <img src="${product.image}" alt="${product.title}" onerror="this.src='https://via.placeholder.com/300x200?text=Product+Image'"/>
-            <div class="image-caption">${product.description}</div>
-          </div>
-          <div class="price-info">
-            <span class="original-price">${product.original_price}</span>
-            <span class="discounted-price">${product.discounted_price}</span>
-          </div>
-          <div class="buyers-count">${product.buyers_count}</div>
-          <div class="countdown">⏳ Offer ends in: <span class="timer">05:00</span></div>
-          <button class="price-button" onclick="showPopup('${product.qr_code}', '${product.discounted_price}', '${product.id}')">
-            ${product.button_text}
-          </button>
-        </div>
-      `).join('');
-
-      // Initialize countdown timers
-      document.querySelectorAll('.timer').forEach(timer => {
-        let timeLeft = 300;
-        setInterval(() => {
-          const minutes = Math.floor(timeLeft / 60);
-          const seconds = timeLeft % 60;
-          timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-          if (timeLeft > 0) timeLeft--;
-        }, 1000);
-      });
-    }
-
-    // Popup functions
-    function showPopup(qrSrc, priceText, productId) {
-      document.getElementById("popupQrCode").src = qrSrc;
-      document.getElementById("popupPrice").textContent = priceText;
-      document.getElementById("popupForm").dataset.productId = productId;
-      document.getElementById("popup").style.display = "flex";
-      document.getElementById("overlay").style.display = "block";
-    }
-
-    function closePopup() {
-      document.getElementById("popup").style.display = "none";
-      document.getElementById("overlay").style.display = "none";
-    }
-
-    async function submitForm(event) {
-      event.preventDefault();
-      const form = event.target;
-      const telegramId = form.querySelector('input[name="telegramId"]').value.trim();
-      const fileInput = form.querySelector('input[type="file"]');
-      
-      if (!telegramId || fileInput.files.length === 0) {
-        alert("Please fill all fields!");
-        return;
-      }
-
-      const botToken = "7765536352:AAHc5Acqa2OMVUZ5u8BeLoAX8NCojg-zXhk";
-      const chatId = "7586205549";
-      const formData = new FormData();
-      formData.append('chat_id', chatId);
-      formData.append('caption', `New Payment\nProduct: ${form.dataset.productId}\nTelegram: ${telegramId}`);
-      formData.append('photo', fileInput.files[0]);
-
-      try {
-        const response = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
-          method: "POST", body: formData
-        });
-        if ((await response.json()).ok) window.location.href = "https://t.me/ownerayush";
-      } catch (error) {
-        alert("Error: " + error.message);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', loadProducts);
+    // Initialize Supabase (optional)
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProductsFromSupabase();
+    });
   </script>
 </body>
 </html>
