@@ -1,9 +1,16 @@
 [build]
-  publish = "src"
-  functions = "netlify/functions"
+  publish = "."
   command = "npm install"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200
+
+[build.environment]
+  SUPABASE_URL = "https://sjogcspgoyhybaiooqfm.supabase.co"
+  SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqb2djc3Bnb3loeWJhaW9vcWZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NjQwNDUsImV4cCI6MjA2NzI0MDA0NX0.2WLksrdiolPDv2uGNQAAmtdQWL0X0EYswM08KFWnKns"

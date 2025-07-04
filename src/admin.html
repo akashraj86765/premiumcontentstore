@@ -3,187 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Premium Content Store</title>
+  <title>Admin Panel</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-color: #1e1e2f;
-      --card-color: #2c2c3e;
-      --text-color: #fff;
-    }
-    
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      margin: 0;
-      padding: 20px;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      background: linear-gradient(90deg, red, orange);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    /* Login Form */
-    .login-container {
-      max-width: 400px;
-      margin: 50px auto;
-      padding: 30px;
-      background: var(--card-color);
-      border-radius: 10px;
-      text-align: center;
-    }
-    
-    .login-container h2 {
-      margin-bottom: 20px;
-    }
-    
-    .login-container input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      border: 1px solid #444;
-      background: #3a3a4e;
-      color: var(--text-color);
-    }
-    
-    .login-btn {
-      background: linear-gradient(90deg, #4CAF50, #2E7D32);
-      color: white;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      width: 100%;
-    }
-    
-    .error-message {
-      color: #ff4d4d;
-      margin-top: 10px;
-      display: none;
-    }
-    
-    /* Admin Content */
-    .admin-content {
-      display: none;
-    }
-    
-    .products-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-      margin-top: 30px;
-    }
-    
-    .product-form {
-      background: var(--card-color);
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-    
-    .form-group {
-      margin-bottom: 15px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-    }
-    
-    .form-group input, 
-    .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #444;
-      background: #3a3a4e;
-      color: var(--text-color);
-    }
-    
-    .form-group textarea {
-      min-height: 80px;
-    }
-    
-    .image-preview {
-      max-width: 200px;
-      max-height: 150px;
-      margin-top: 10px;
-      display: block;
-    }
-    
-    .btn {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-right: 10px;
-    }
-    
-    .btn-save {
-      background: linear-gradient(90deg, #4CAF50, #2E7D32);
-      color: white;
-    }
-    
-    .btn-delete {
-      background: #ff4d4d;
-      color: white;
-    }
-    
-    .btn-add {
-      background: #4d79ff;
-      color: white;
-      margin-top: 20px;
-    }
-    
-    .success-message {
-      color: #4CAF50;
-      text-align: center;
-      margin-top: 20px;
-      display: none;
-    }
-    
-    .admin-actions {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 30px;
-    }
+    :root { --bg-color: #1e1e2f; --card-color: #2c2c3e; --text-color: #fff; }
+    body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 30px; background: linear-gradient(90deg, red, orange); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    /* ... (keep all your admin styles) ... */
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Login Form -->
     <div class="login-container" id="loginContainer">
       <h2>Admin Login</h2>
       <input type="password" id="adminPassword" placeholder="Enter Admin Password">
       <button class="login-btn" onclick="checkLogin()">Login</button>
-      <div class="error-message" id="loginError">Incorrect password. Please try again.</div>
+      <div class="error-message" id="loginError">Incorrect password</div>
     </div>
-    
-    <!-- Admin Content -->
     <div class="admin-content" id="adminContent">
       <h1>Manage Products</h1>
-      
-      <div class="products-list" id="productsList">
-        <!-- Products will be loaded here -->
-      </div>
-      
+      <div class="products-list" id="productsList"></div>
       <button class="btn btn-add" onclick="addNewProduct()">+ Add New Product</button>
-      
       <div class="admin-actions">
         <div>
           <label for="adminNewPassword">Change Admin Password:</label>
@@ -192,182 +33,115 @@
         </div>
         <button class="btn btn-save" onclick="saveAllProducts()">Save All Changes</button>
       </div>
-      
-      <div class="success-message" id="successMessage">
-        Changes saved successfully!
-      </div>
+      <div class="success-message" id="successMessage"></div>
     </div>
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    const supabaseUrl = 'https://sjogcspgoyhybaiooqfm.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqb2djc3Bnb3loeWJhaW9vcWZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NjQwNDUsImV4cCI6MjA2NzI0MDA0NX0.2WLksrdiolPDv2uGNQAAmtdQWL0X0EYswM08KFWnKns';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
     let products = [];
-    
-    // Check admin login
+
     async function checkLogin() {
       const password = document.getElementById('adminPassword').value;
+      const { data } = await supabase
+        .from('admin_settings')
+        .select('value')
+        .eq('key', 'admin_password')
+        .single();
       
-      try {
-        const response = await fetch('/.netlify/functions/auth', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'login', password })
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-          document.getElementById('loginContainer').style.display = 'none';
-          document.getElementById('adminContent').style.display = 'block';
-          loadProducts();
-        } else {
-          document.getElementById('loginError').style.display = 'block';
-        }
-      } catch (error) {
-        console.error("Login error:", error);
+      if (data?.value === password) {
+        document.getElementById('loginContainer').style.display = 'none';
+        document.getElementById('adminContent').style.display = 'block';
+        loadProducts();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
       }
     }
-    
-    // Change admin password
-    async function changePassword() {
-      const newPassword = document.getElementById('adminNewPassword').value;
-      if (!newPassword) return;
-      
-      try {
-        const response = await fetch('/.netlify/functions/auth', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'changePassword', newPassword })
-        });
-        
-        const result = await response.json();
-        if (result.success) {
-          document.getElementById('adminNewPassword').value = '';
-          showSuccess('Password changed successfully!');
-        }
-      } catch (error) {
-        console.error("Password change error:", error);
-      }
-    }
-    
-    // Load products from server
+
     async function loadProducts() {
-      try {
-        const response = await fetch('/.netlify/functions/getProducts');
-        products = await response.json();
-        renderProducts();
-      } catch (error) {
-        console.error("Error loading products:", error);
-      }
+      const { data } = await supabase.from('products').select('*');
+      products = data || [];
+      renderProducts();
     }
-    
-    // Render products in admin panel
+
     function renderProducts() {
-      const productsList = document.getElementById('productsList');
-      productsList.innerHTML = '';
-      
-      products.forEach((product, index) => {
-        productsList.innerHTML += `
-          <div class="product-form" data-id="${product.id}">
-            <div class="form-group">
-              <label>Title</label>
-              <input type="text" value="${product.title}" onchange="updateProduct(${index}, 'title', this.value)">
-            </div>
-            
-            <div class="form-group">
-              <label>Image URL</label>
-              <input type="text" value="${product.image}" onchange="updateProduct(${index}, 'image', this.value)">
-              <img src="${product.image}" class="image-preview" onerror="this.style.display='none'">
-            </div>
-            
-            <div class="form-group">
-              <label>Description</label>
-              <textarea onchange="updateProduct(${index}, 'description', this.value)">${product.description}</textarea>
-            </div>
-            
-            <div class="form-group">
-              <label>Original Price</label>
-              <input type="text" value="${product.originalPrice}" onchange="updateProduct(${index}, 'originalPrice', this.value)">
-            </div>
-            
-            <div class="form-group">
-              <label>Discounted Price</label>
-              <input type="text" value="${product.discountedPrice}" onchange="updateProduct(${index}, 'discountedPrice', this.value)">
-            </div>
-            
-            <div class="form-group">
-              <label>Button Text</label>
-              <input type="text" value="${product.buttonText}" onchange="updateProduct(${index}, 'buttonText', this.value)">
-            </div>
-            
-            <div class="form-group">
-              <label>Buyers Count</label>
-              <input type="text" value="${product.buyersCount}" onchange="updateProduct(${index}, 'buyersCount', this.value)">
-            </div>
-            
-            <div class="form-group">
-              <label>QR Code URL</label>
-              <input type="text" value="${product.qrCode}" onchange="updateProduct(${index}, 'qrCode', this.value)">
-              <img src="${product.qrCode}" class="image-preview" onerror="this.style.display='none'">
-            </div>
-            
-            <button class="btn btn-delete" onclick="deleteProduct(${index})">Delete</button>
+      const container = document.getElementById('productsList');
+      container.innerHTML = products.map((product, index) => `
+        <div class="product-form">
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" value="${product.title || ''}" onchange="updateProduct(${index}, 'title', this.value)">
           </div>
-        `;
-      });
+          <div class="form-group">
+            <label>Image URL</label>
+            <input type="text" value="${product.image || ''}" onchange="updateProduct(${index}, 'image', this.value)">
+            <img src="${product.image || ''}" class="image-preview" onerror="this.style.display='none'">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea onchange="updateProduct(${index}, 'description', this.value)">${product.description || ''}</textarea>
+          </div>
+          <div class="form-group">
+            <label>Original Price</label>
+            <input type="text" value="${product.original_price || ''}" onchange="updateProduct(${index}, 'original_price', this.value)">
+          </div>
+          <div class="form-group">
+            <label>Discounted Price</label>
+            <input type="text" value="${product.discounted_price || ''}" onchange="updateProduct(${index}, 'discounted_price', this.value)">
+          </div>
+          <div class="form-group">
+            <label>QR Code URL</label>
+            <input type="text" value="${product.qr_code || ''}" onchange="updateProduct(${index}, 'qr_code', this.value)">
+            <img src="${product.qr_code || ''}" class="image-preview" onerror="this.style.display='none'">
+          </div>
+          <button class="btn btn-delete" onclick="deleteProduct('${product.id}')">Delete</button>
+        </div>
+      `).join('');
     }
-    
-    // Update product data
+
     function updateProduct(index, field, value) {
       products[index][field] = value;
     }
-    
-    // Add new product
+
     function addNewProduct() {
-      products.push({
+      products.unshift({
         id: 'product-' + Date.now(),
         title: 'New Product',
         image: 'https://via.placeholder.com/300x200?text=New+Product',
         description: 'Product description',
-        originalPrice: '₹999',
-        discountedPrice: '₹199/- ONLY',
-        buttonText: '₹199/- BUY NOW',
-        buyersCount: '0 Buyers',
-        qrCode: 'https://via.placeholder.com/300x300?text=QR+Code'
+        original_price: '₹999',
+        discounted_price: '₹199/- ONLY',
+        qr_code: 'https://via.placeholder.com/300x300?text=QR+Code'
       });
       renderProducts();
     }
-    
-    // Delete product
-    function deleteProduct(index) {
-      if (confirm('Are you sure you want to delete this product?')) {
-        products.splice(index, 1);
-        renderProducts();
-      }
+
+    async function deleteProduct(id) {
+      if (!confirm('Delete this product?')) return;
+      await supabase.from('products').delete().eq('id', id);
+      products = products.filter(p => p.id !== id);
+      renderProducts();
     }
-    
-    // Save all products to server
+
     async function saveAllProducts() {
-      try {
-        const response = await fetch('/.netlify/functions/updateProducts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ products })
-        });
-        
-        if (response.ok) {
-          showSuccess('All changes saved successfully!');
-        }
-      } catch (error) {
-        console.error("Error saving products:", error);
-      }
+      await supabase.from('products').delete().neq('id', '');
+      const { error } = await supabase.from('products').insert(products);
+      showMessage(error ? 'Error saving!' : 'Saved successfully!');
     }
-    
-    // Show success message
-    function showSuccess(message) {
-      const successEl = document.getElementById('successMessage');
-      successEl.textContent = message;
-      successEl.style.display = 'block';
-      setTimeout(() => successEl.style.display = 'none', 3000);
+
+    async function changePassword() {
+      const newPassword = document.getElementById('adminNewPassword').value;
+      await supabase.from('admin_settings').upsert([{ key: 'admin_password', value: newPassword }]);
+      showMessage('Password changed!');
+    }
+
+    function showMessage(msg) {
+      const el = document.getElementById('successMessage');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 3000);
     }
   </script>
 </body>
