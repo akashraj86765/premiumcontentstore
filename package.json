@@ -1,0 +1,7 @@
+{
+  "name": "premium-content-store",
+  "version": "1.0.0",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.21.0"
+  }
+}
